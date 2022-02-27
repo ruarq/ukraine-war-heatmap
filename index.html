@@ -23,7 +23,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_f75760ba33474614af1f00cbd12c3c6d {
+                #map_970804a294d84397ae6902df73c59e5f {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -32,17 +32,101 @@
                 }
             </style>
         
-    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@master/folium/templates/leaflet_heat.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/pa7_hm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/pa7_leaflet_hm.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.css"/>
+    
+            <script>
+                var TDHeatmap = L.TimeDimension.Layer.extend({
+
+            initialize: function(data, options) {
+                var heatmapCfg = {
+                    radius: 15,
+                    maxOpacity: 1.,
+                    scaleRadius: false,
+                    useLocalExtrema: false,
+                    latField: 'lat',
+                    lngField: 'lng',
+                    valueField: 'count',
+                    defaultWeight : 1,
+                };
+                heatmapCfg = $.extend({}, heatmapCfg, options.heatmapOptions || {});
+                var layer = new HeatmapOverlay(heatmapCfg);
+                L.TimeDimension.Layer.prototype.initialize.call(this, layer, options);
+                this._currentLoadedTime = 0;
+                this._currentTimeData = {
+                    data: []
+                    };
+                this.data= data;
+                this.defaultWeight = heatmapCfg.defaultWeight || 1;
+            },
+            onAdd: function(map) {
+                L.TimeDimension.Layer.prototype.onAdd.call(this, map);
+                map.addLayer(this._baseLayer);
+                if (this._timeDimension) {
+                    this._getDataForTime(this._timeDimension.getCurrentTime());
+                }
+            },
+            _onNewTimeLoading: function(ev) {
+                this._getDataForTime(ev.time);
+                return;
+            },
+            isReady: function(time) {
+                return (this._currentLoadedTime == time);
+            },
+            _update: function() {
+                this._baseLayer.setData(this._currentTimeData);
+                return true;
+            },
+            _getDataForTime: function(time) {
+                    delete this._currentTimeData.data;
+                    this._currentTimeData.data = [];
+                    var data = this.data[time-1];
+                    for (var i = 0; i < data.length; i++) {
+                        this._currentTimeData.data.push({
+                                lat: data[i][0],
+                                lng: data[i][1],
+                                count: data[i].length>2 ? data[i][2] : this.defaultWeight
+                            });
+                        }
+                    this._currentLoadedTime = time;
+                    if (this._timeDimension && time == this._timeDimension.getCurrentTime() && !this._timeDimension.isLoading()) {
+                        this._update();
+                    }
+                    this.fire('timeload', {
+                        time: time
+                    });
+                }
+        });
+
+        L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
+            initialize: function(index, options) {
+                var playerOptions = {
+                    buffer: 1,
+                    minBufferReady: -1
+                    };
+                options.playerOptions = $.extend({}, playerOptions, options.playerOptions || {});
+                L.Control.TimeDimension.prototype.initialize.call(this, options);
+                this.index = index;
+                },
+            _getDisplayDateFormat: function(date){
+                return this.index[date.getTime()-1];
+                }
+            });
+            </script>
+                
 </head>
 <body>    
     
-            <div class="folium-map" id="map_f75760ba33474614af1f00cbd12c3c6d" ></div>
+            <div class="folium-map" id="map_970804a294d84397ae6902df73c59e5f" ></div>
         
 </body>
 <script>    
     
-            var map_f75760ba33474614af1f00cbd12c3c6d = L.map(
-                "map_f75760ba33474614af1f00cbd12c3c6d",
+            var map_970804a294d84397ae6902df73c59e5f = L.map(
+                "map_970804a294d84397ae6902df73c59e5f",
                 {
                     center: [49.3956617, 30.9809839],
                     crs: L.CRS.EPSG3857,
@@ -56,15 +140,53 @@
 
         
     
-            var tile_layer_74832cede04e4019b5274b3647b79d99 = L.tileLayer(
+            var tile_layer_c7c506180ee846df8e913e3aade70b4a = L.tileLayer(
                 "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
                 {"attribution": "Map tiles by \u003ca href=\"http://stamen.com\"\u003eStamen Design\u003c/a\u003e, under \u003ca href=\"http://creativecommons.org/licenses/by/3.0\"\u003eCC BY 3.0\u003c/a\u003e. Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://creativecommons.org/licenses/by-sa/3.0\"\u003eCC BY SA\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_f75760ba33474614af1f00cbd12c3c6d);
+            ).addTo(map_970804a294d84397ae6902df73c59e5f);
         
     
-            var heat_map_4c4a526ed2f845099916b023fc820334 = L.heatLayer(
-                [[49.3402711, 31.610320733574746, 1], [46.8054626, 33.4817825, 4], [45.3534002, 36.4538645, 1], [47.0957648, 37.5499621, 2], [50.5950864, 32.3866658, 1], [51.272593, 31.7417235, 7], [50.3115386, 34.8868923, 1], [46.4843023, 30.7322878, 1], [48.4088704, 7.4492808, 3], [50.9080532, 28.3867504, 2], [50.90007875, 34.809040734367024, 4], [46.5421715, 33.4079326, 6], [48.0158753, 37.8013407, 5], [49.6630002, 25.6167516, 1], [47.3886032, 31.9442334, 2], [21.0000287, 57.0036901, 1], [50.4500336, 30.5241361, 15], [50.4500336, 30.5241361, 4], [47.5984285, 37.4998511, 2], [45.709097, -68.8590201, 1], [49.9923181, 36.2310146, 26], [50.5204782, 30.2444078, 4], [50.8813893, 11.5133698, 4], [46.7549303, 33.3741329, 4]],
-                {"blur": 35, "maxZoom": 18, "minOpacity": 0.5, "radius": 40}
-            ).addTo(map_f75760ba33474614af1f00cbd12c3c6d);
+
+            var times = [1];
+
+            map_970804a294d84397ae6902df73c59e5f.timeDimension = L.timeDimension(
+                {times : times, currentTime: new Date(1)}
+            );
+
+            var heat_map_d454dbd363644466929a4c530c285cceControl = new L.Control.TimeDimensionCustom(['27.02.22 19:21'], {
+                autoPlay: false,
+                backwardButton: true,
+                displayDate: true,
+                forwardButton: true,
+                limitMinimumRange: 5,
+                limitSliders: true,
+                loopButton: true,
+                maxSpeed: 10,
+                minSpeed: 0.1,
+                playButton: true,
+                playReverseButton: true,
+                position: "bottomleft",
+                speedSlider: true,
+                speedStep: 0.1,
+                styleNS: "leaflet-control-timecontrol",
+                timeSlider: true,
+                timeSliderDrapUpdate: false,
+                timeSteps: 1
+                })
+                .addTo(map_970804a294d84397ae6902df73c59e5f);
+
+                var heat_map_d454dbd363644466929a4c530c285cce = new TDHeatmap([[[46.5421715, 33.4079326, 0.5188745216627708], [21.0000287, 57.0036901, 0.2773500981126146], [47.3886032, 31.9442334, 0.2773500981126146], [50.5950864, 32.3866658, 0.19611613513818404], [50.5204782, 30.2444078, 0.3396831102433787], [50.4500336, 30.5241361, 0.3396831102433787], [46.4843023, 30.7322878, 0.19611613513818404], [47.8507859, 35.1182867, 0.19611613513818404], [49.3402711, 31.610320733574746, 0.19611613513818404], [47.5984285, 37.4998511, 0.3396831102433787], [50.8813893, 11.5133698, 0.3396831102433787], [47.0957648, 37.5499621, 0.3396831102433787], [50.4500336, 30.5241361, 0.7844645405527362], [46.8054626, 33.4817825, 0.4385290096535146], [48.4088704, 7.4492808, 0.3922322702763681], [50.90007875, 34.809040734367024, 0.4385290096535146], [50.9080532, 28.3867504, 0.2773500981126146], [46.7549303, 33.3741329, 0.4385290096535146], [48.0158753, 37.8013407, 0.3922322702763681], [45.3534002, 36.4538645, 0.19611613513818404], [51.272593, 31.7417235, 0.5547001962252291], [50.3115386, 34.8868923, 0.19611613513818404], [49.9923181, 36.2310146, 1.0]]],
+                {heatmapOptions: {
+                        radius: 40,
+                        minOpacity: 0,
+                        maxOpacity: 1.0,
+                        scaleRadius: false,
+                        useLocalExtrema: false,
+                        defaultWeight: 1,
+                        
+                    }
+                })
+                .addTo(map_970804a294d84397ae6902df73c59e5f);
+
         
 </script>

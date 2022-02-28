@@ -4,7 +4,6 @@ You can see that heatmap [here](https://ruarq.github.io/ukraine-war-heatmap/). I
 
 ## How to run
 1. Install dependencies with `pip install dotenv folium geopy praw`
-
 2. Create `.env` file and populate it with:
 	```ini
 	REDDIT_USERNAME=<your reddit username>

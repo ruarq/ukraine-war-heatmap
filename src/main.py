@@ -42,7 +42,7 @@ def load_cities():
 
 def query_submissions(reddit, sub):
 	print(f"Querying hot submissions from 'r/{sub}'")
-	r = reddit.subreddit(sub).hot(limit=200)
+	r = reddit.subreddit(sub).hot(limit=150)
 	return r
 
 def get_city_mention_counts(cities, submissions):
@@ -129,7 +129,7 @@ def create_heatmap(mapdata):
 def merge_dicts(a, b):
 	return { k: a.get(k, 0) + b.get(k, 0) for k in set(a) | set(b) }
 
-def query_mentions_from_subreddits(reddit, subreddits, cities):
+def query_mentions_from_subreddits(reddit, cities, subreddits):
 	mentions = dict()
 	for subreddit in subreddits:
 		submissions = query_submissions(reddit, subreddit)
@@ -158,9 +158,21 @@ def main():
 	)
 
 	cities = load_cities()
-	mentions = query_mentions_from_subreddits(reddit,
-		['CombatFootage', 'UkraineWarVideoReport', 'ukraine', 'worldnews', 'UkrainevRussia', 'UkraineInvasionVideos', 'UkrainianConflict'],
-		cities)
+	mentions = query_mentions_from_subreddits(
+		reddit,
+		cities,
+		[
+			'CombatFootage',
+			'UkraineWarVideoReport',
+			'ukraine',
+			'worldnews',
+			'UkrainevRussia',
+			'UkraineInvasionVideos',
+			'UkrainianConflict',
+			'Ukraine_UA',
+			'UkraineWarReports'
+		]
+	)
 
 	# dump for historic data and heatmap with time
 	now = datetime.utcnow().strftime('%d.%m.%y %H:%M')

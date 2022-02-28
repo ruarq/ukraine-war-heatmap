@@ -79,16 +79,10 @@ def get_city_mention_counts(cities, submissions):
 def query_city_location(city):
 	nominatim = Nominatim(user_agent='ukraine-war-heatmap')
 
-	location = nominatim.geocode(
-		{
-			'city': city
-		},
-		language='en',
-		country_codes='ua'
-	)
+	location = nominatim.geocode(city, country_codes='ua')
 
 	s = f"Querying location for '{city}'"
-	if location.raw:
+	if location and location.raw:
 		print(f'[OKAY] {s}')
 		return (float(location.raw['lat']), float(location.raw['lon']))
 	else:

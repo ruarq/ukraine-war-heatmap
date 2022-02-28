@@ -41,7 +41,7 @@ def load_cities():
 	return cities
 
 def query_submissions(reddit, sub):
-	print(f"Querying hot submissions from '{sub}'")
+	print(f"Querying hot submissions from 'r/{sub}'")
 	r = reddit.subreddit(sub).hot(limit=200)
 	return r
 
@@ -87,7 +87,7 @@ def query_city_location(city):
 		country_codes='ua'
 	)
 
-	s = f"Requesting location for '{city}'"
+	s = f"Querying location for '{city}'"
 	if location.raw:
 		print(f'[OKAY] {s}')
 		return (float(location.raw['lat']), float(location.raw['lon']))
@@ -96,7 +96,10 @@ def query_city_location(city):
 		return None
 
 def create_heatmap(mapdata):
-	map = fl.Map(tiles='Stamen Terrain', location=[49.3956617, 30.9809839], zoom_start=6)
+	map = fl.Map(
+		tiles='Stamen Terrain',
+		location=[49.3956617, 30.9809839], zoom_start=6
+	)
 
 	# timestamps, sort ascending
 	index = list(mapdata.keys())
@@ -160,7 +163,7 @@ def main():
 		cities)
 
 	print(f'Searched in {submission_count} submissions and found:')
-	print(mentions)
+	print(json.dumps(mentions, indent=4, sort_keys=True))
 
 	mapdata = {}
 

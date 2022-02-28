@@ -162,6 +162,11 @@ def main():
 		['CombatFootage', 'UkraineWarVideoReport', 'ukraine', 'worldnews', 'UkrainevRussia', 'UkraineInvasionVideos', 'UkrainianConflict'],
 		cities)
 
+	# dump for historic data and heatmap with time
+	now = datetime.utcnow().strftime('%d.%m.%y %H:%M')
+	json.dump(mentions, open(f'data/historic/{now} UTC', 'w'))
+
+	# print debug info
 	print(f'Searched in {submission_count} submissions and found:')
 	print(json.dumps(mentions, indent=4, sort_keys=True))
 
@@ -172,10 +177,6 @@ def main():
 	# 	if l is not None:
 	# 		locations.append(l)
 	# 		weights.append(mentions[city])
-
-	# dump for historic data and heatmap with time
-	now = datetime.utcnow().strftime('%d.%m.%y %H:%M')
-	json.dump(mentions, open(f'data/historic/{now} UTC', 'w'))
 
 	locations = {}
 

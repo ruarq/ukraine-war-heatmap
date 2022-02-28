@@ -174,8 +174,8 @@ def main():
 	# 		weights.append(mentions[city])
 
 	# dump for historic data and heatmap with time
-	now = datetime.now().strftime('%d.%m.%y %H:%M')
-	json.dump(mentions, open(f'data/historic/{now}', 'w'))
+	now = datetime.utcnow().strftime('%d.%m.%y %H:%M')
+	json.dump(mentions, open(f'data/historic/{now} UTC', 'w'))
 
 	locations = {}
 

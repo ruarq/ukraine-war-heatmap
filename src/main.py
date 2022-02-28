@@ -77,15 +77,17 @@ def get_city_mention_counts(cities, submissions):
 	return mentions
 
 def query_city_location(city):
-	nominatim = Nominatim(user_agent='ukraine-war-heatmap')
-
-	location = nominatim.geocode(city, country_codes='ua')
-
 	s = f"Querying location for '{city}'"
-	if location and location.raw:
+
+	try:
+		nominatim = Nominatim(user_agent='ukraine-war-heatmap')
+		location = nominatim.geocode(city, country_codes='ua')
+		location = [float(location.raw['lat']), float(location.raw['lon'])]
+
 		print(f'[OKAY] {s}')
-		return (float(location.raw['lat']), float(location.raw['lon']))
-	else:
+		return location
+
+	except:
 		print(f'[FAIL] {s}')
 		return None
 
@@ -99,24 +101,23 @@ def create_heatmap(mapdata):
 	index = list(mapdata.keys())
 	index.sort()
 
-	map.add_child(
-		HeatMapWithTime(
-			name='Timeline',
-			data=list(mapdata.values()),
-			index=index,
-			radius=0.5,
-			scale_radius=True
-		)
-	)
+	HeatMapWithTime(
+		name='Timeline',
+		data=list(mapdata.values()),
+		index=index,
+		radius=0.5,
+		scale_radius=True
+	).add_to(map)
 
-	# map.add_child(
-	# 	HeatMap(
-	# 		name='Now',
-	# 		blur=25,
-	# 		radius=40,
-	# 		data=list(mapdata.values())[-1]
-	# 	)
-	# )
+	# HeatMap(
+	# 	name='Now',
+	# 	blur=25,
+	# 	radius=35,
+	# 	data=list(mapdata.values())[-1]
+	# ).add_to(map)
+
+	fl.TileLayer('OpenStreetMap').add_to(map)
+	fl.LayerControl(collapsed=False).add_to(map)
 
 	map.save('index.html')
 

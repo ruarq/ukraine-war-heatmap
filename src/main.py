@@ -147,10 +147,10 @@ def main():
 
 	# init praw
 	reddit = praw.Reddit(
-		client_id=os.environ.get('REDDIT_API_ID'),
-		client_secret=os.environ.get('REDDIT_API_SECRET'),
-		username=os.environ.get('REDDIT_USERNAME'),
-		password=os.environ.get('REDDIT_PASSWORD'),
+		client_id=os.getenv('REDDIT_API_ID'),
+		client_secret=os.getenv('REDDIT_API_SECRET'),
+		username=os.getenv('REDDIT_USERNAME'),
+		password=os.getenv('REDDIT_PASSWORD'),
 		user_agent='ukraine war hotmap'
 	)
 

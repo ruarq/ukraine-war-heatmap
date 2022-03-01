@@ -29,22 +29,53 @@ from datetime import datetime
 import os
 import math
 from dotenv import load_dotenv
+import Html
 
 TIME_FORMAT = '%Y-%m-%d %H:%M UTC'
+SUBMISSION_QUERY_LIMIT = 150
+
 submission_count = 0
+
+class News:
+	def __init__(self, title, time, score, author, source):
+		self.title = title
+		self.time = time
+		self.score = score
+		self.author = author
+		self.source = source
 
 def load_cities():
 	cities = open(f'data/cities').read().split('\n')
-	
-	#remove empty city names
-	cities = [city for city in cities if len(city) > 1]
-
-	return cities
+	# Remove empty city names
+	return [city for city in cities if len(city) > 1]
 
 def query_submissions(reddit, sub):
 	print(f"Querying hot submissions from 'r/{sub}'")
-	r = reddit.subreddit(sub).hot(limit=150)
+	r = reddit.subreddit(sub).hot(limit=SUBMISSION_QUERY_LIMIT)
 	return r
+
+def query_news(reddit, source='worldnews'):
+	submissions = query_submissions(reddit, source)
+
+	# Words to look out for in the submission titles. NOTE: should be all lowercase
+	trigger_words = ['ukraine', 'russia', 'zelensky', 'putin', 'belarus']
+
+	news = list()
+
+	for submission in submissions:
+		if submission.score < 10000:
+			continue
+
+		# Check all the trigger words
+		relevant = False
+		for trigger_word in trigger_words:
+			if trigger_word in submission.title.lower():
+				relevant = True
+
+		if relevant:
+			news.append(News(submission.title, submission.created_utc, submission.score, submission.author.name, submission.url))
+
+	return news
 
 def get_city_mention_counts(cities, submissions):
 	mentions = dict()
@@ -80,6 +111,15 @@ def get_city_mention_counts(cities, submissions):
 def query_city_location(city):
 	s = f"Querying location for '{city}'"
 
+	# Nominatim can't find the location for some cities, but we know they exists so translate them
+	# to something Nominatim can find
+	translations = {
+		'borodyanka': 'borodianka'
+	}
+
+	if city.lower() in translations:
+		city = translations[city.lower()]
+
 	try:
 		nominatim = Nominatim(user_agent='ukraine-war-heatmap')
 		location = nominatim.geocode(city, country_codes='ua')
@@ -88,11 +128,11 @@ def query_city_location(city):
 		print(f'[OKAY] {s}')
 		return location
 
-	except:
+	except: # TODO(ruarq): find out what exception Nominatim throws
 		print(f'[FAIL] {s}')
 		return None
 
-def create_heatmap(mapdata):
+def generate_heatmap(mapdata):
 	map = fl.Map(
 		tiles='Stamen Terrain',
 		location=[49.3956617, 30.9809839], zoom_start=6
@@ -124,7 +164,7 @@ def create_heatmap(mapdata):
 	fl.TileLayer('OpenStreetMap').add_to(map)
 	fl.LayerControl().add_to(map)
 
-	map.save('index.html')
+	return map._repr_html_()
 
 def merge_dicts(a, b):
 	return { k: a.get(k, 0) + b.get(k, 0) for k in set(a) | set(b) }
@@ -145,6 +185,29 @@ def load_historic_data(directory):
 
 	return data
 
+def generate_news_column(reddit):
+	subreddit = 'worldnews'
+	news = query_news(reddit, subreddit)
+
+	html = '<div class="news-column">'
+
+	# Reddit logo div
+	html += '<div id="reddit-logo">'
+	html += '<img src="https://www.redditinc.com/assets/images/site/reddit-logo.png" height=30px alt="reddit-logo"/>'
+	html += f'<h2><a href="https://reddit.com/r/{subreddit}">r/{subreddit}</a></h2>'
+	html += '</div>'
+
+	# news div
+	html += '<div><ul class="news-column-list">'
+	for n in news:
+		html += '<li>'
+		html += '<div class="element-content-div">'
+		html += f'<div><a href="{n.source}">Source</a></div><div>{n.title}</div></div>'
+		html += '</li>'
+	html += '</ul></div></div>'
+
+	return html
+
 def main():
 	load_dotenv()
 
@@ -157,6 +220,7 @@ def main():
 		user_agent='ukraine war hotmap'
 	)
 
+	# query mentions of cities
 	cities = load_cities()
 	mentions = query_mentions_from_subreddits(
 		reddit,
@@ -183,15 +247,7 @@ def main():
 	print(json.dumps(mentions, indent=4, sort_keys=True))
 
 	mapdata = {}
-
-	# for city in mentions.keys():
-	# 	l = get_city_location(city)
-	# 	if l is not None:
-	# 		locations.append(l)
-	# 		weights.append(mentions[city])
-
 	locations = {}
-
 	data = load_historic_data('data/historic')
 
 	# compile mapdata for folium
@@ -216,7 +272,18 @@ def main():
 				else:
 					mapdata[time] = [d]
 
-	create_heatmap(mapdata)
+	heatmap_html = generate_heatmap(mapdata)
+
+	file = open('index.html', 'w')
+	file.write('<html><head>')
+	file.write('<title>Ukraine War Map/Heatmap by ruarq</title>')
+	file.write('<link rel="stylesheet" type="text/css" href="style.css"/>')
+	file.write('</head>')
+	file.write('<body><div class="leaflet-map">')
+	file.write(heatmap_html)
+	file.write('</div>')
+	file.write(f'{generate_news_column(reddit)}')
+	file.write('</div></body></html>')
 
 if __name__ == '__main__':
 	main()

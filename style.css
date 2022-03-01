@@ -1,0 +1,32 @@
+.leaflet-map {
+	float: left;
+	width: 75%;
+	height: 100%;
+}
+
+.news-column {
+	float: right;
+	width: 25%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.news-column-list {
+	list-style-type: none;
+}
+
+.news-column-list li {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.news-column-list .element-content-div {
+	padding: 5px;
+}
+
+#reddit-logo {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}

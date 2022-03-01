@@ -30,6 +30,7 @@ import os
 import math
 from dotenv import load_dotenv
 
+TIME_FORMAT = '%d-%m-%y %H:%M UTC'
 submission_count = 0
 
 def load_cities():
@@ -99,6 +100,8 @@ def create_heatmap(mapdata):
 
 	# timestamps, sort ascending
 	index = list(mapdata.keys())
+	for timestamp in index:
+		timestamp = datetime.strptime(timestamp, TIME_FORMAT)
 	index.sort()
 
 	HeatMapWithTime(
@@ -171,8 +174,8 @@ def main():
 	)
 
 	# dump for historic data and heatmap with time
-	now = datetime.utcnow().strftime('%d-%m-%y %H:%M')
-	json.dump(mentions, open(f'data/historic/{now} UTC', 'w'))
+	now = datetime.utcnow().strftime(TIME_FORMAT)
+	json.dump(mentions, open(f'data/historic/{now}', 'w'))
 
 	# print debug info
 	print(f'Searched in {submission_count} submissions and found:')

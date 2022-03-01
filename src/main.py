@@ -106,7 +106,8 @@ def create_heatmap(mapdata):
 		data=list(mapdata.values()),
 		index=index,
 		radius=0.5,
-		scale_radius=True
+		scale_radius=True,
+		start_index=len(index)
 	).add_to(map)
 
 	# HeatMap(
@@ -117,7 +118,7 @@ def create_heatmap(mapdata):
 	# ).add_to(map)
 
 	fl.TileLayer('OpenStreetMap').add_to(map)
-	fl.LayerControl(collapsed=False).add_to(map)
+	fl.LayerControl().add_to(map)
 
 	map.save('index.html')
 

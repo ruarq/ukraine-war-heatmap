@@ -3,7 +3,9 @@ This project takes submissions about Ukraine from subreddits like r/CombatFootag
 You can see that heatmap [here](https://ruarq.github.io/ukraine-war-heatmap/). It updates every 30 minutes.
 
 ## How to run
-1. Install dependencies with `pip install dotenv folium geopy praw`
+1. Install dependencies with `pip install dotenv geopy praw`
+
+	**NOTE:** You will also have to install my [folium](https://github.com/python-visualization/folium) fork.
 2. Create `.env` file and populate it with:
 	```ini
 	REDDIT_USERNAME=<your reddit username>

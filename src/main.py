@@ -189,24 +189,44 @@ def generate_news_column(reddit):
 	subreddit = 'worldnews'
 	news = query_news(reddit, subreddit)
 
-	html = '<div class="news-column">'
+	html_news_list = list()
 
-	# Reddit logo div
-	html += '<div id="reddit-logo">'
-	html += '<img src="https://www.redditinc.com/assets/images/site/reddit-logo.png" height=30px alt="reddit-logo"/>'
-	html += f'<h2><a href="https://reddit.com/r/{subreddit}">r/{subreddit}</a></h2>'
-	html += '</div>'
-
-	# news div
-	html += '<div><ul class="news-column-list">'
 	for n in news:
-		html += '<li>'
-		html += '<div class="element-content-div">'
-		html += f'<div><a href="{n.source}">Source</a></div><div>{n.title}</div></div>'
-		html += '</li>'
-	html += '</ul></div></div>'
+		html_news_list.append(
+			Html.Li(Html.Div(content=[
+					Html.Div(Html.A(
+						content='Source',
+						href=n.source
+					)),
+					Html.Div(content=n.title)
+				],
+				id='element-content-div'
+			))
+		)
 
-	return html
+	# Reddit logo
+	return Html.Div(
+		content=[
+			Html.Div(content=[
+				Html.Img(
+					src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
+					alt='reddit-logo',
+					style='height: 30px'
+				),
+				Html.H2(
+					Html.A(content=f'r/{subreddit}',
+						href=f'https://reddit.com/r/{subreddit}'
+					)
+				)],
+				id='reddit-logo'
+			),
+			Html.Div(Html.Ul(
+				content=html_news_list,
+				Class='news-column-list'
+			))
+		],
+		Class='news-column'
+	)
 
 def main():
 	load_dotenv()
@@ -275,15 +295,21 @@ def main():
 	heatmap_html = generate_heatmap(mapdata)
 
 	file = open('index.html', 'w')
-	file.write('<html><head>')
-	file.write('<title>Ukraine War Map/Heatmap by ruarq</title>')
-	file.write('<link rel="stylesheet" type="text/css" href="style.css"/>')
-	file.write('</head>')
-	file.write('<body><div class="leaflet-map">')
-	file.write(heatmap_html)
-	file.write('</div>')
-	file.write(f'{generate_news_column(reddit)}')
-	file.write('</div></body></html>')
+	file.write(
+		Html.Html([
+			Html.Head([
+				Html.Title('Ukraine War Map/Heatmap by ruarq'),
+				Html.Link(rel='stylesheet', type='text/css', href='style.css')
+			]),
+			Html.Body([
+				Html.Div(
+					content=heatmap_html,
+					Class='leaflet-map'
+				),
+				generate_news_column(reddit)
+			])
+		]).dumps()
+	)
 
 if __name__ == '__main__':
 	main()

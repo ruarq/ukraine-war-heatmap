@@ -105,20 +105,13 @@ def create_heatmap(mapdata):
 	index.sort()
 
 	HeatMapWithTime(
-		name='Timeline',
+		name='Heatmap',
 		data=list(mapdata.values()),
 		index=index,
 		radius=0.5,
 		scale_radius=True,
 		start_index=len(index)
 	).add_to(map)
-
-	# HeatMap(
-	# 	name='Now',
-	# 	blur=25,
-	# 	radius=35,
-	# 	data=list(mapdata.values())[-1]
-	# ).add_to(map)
 
 	fl.TileLayer('OpenStreetMap').add_to(map)
 	fl.LayerControl().add_to(map)

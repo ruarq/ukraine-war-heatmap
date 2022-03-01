@@ -30,7 +30,7 @@ import os
 import math
 from dotenv import load_dotenv
 
-TIME_FORMAT = '%d-%m-%y %H:%M UTC'
+TIME_FORMAT = '%Y-%m-%d %H:%M UTC'
 submission_count = 0
 
 def load_cities():
@@ -100,9 +100,17 @@ def create_heatmap(mapdata):
 
 	# timestamps, sort ascending
 	index = list(mapdata.keys())
-	for timestamp in index:
-		timestamp = datetime.strptime(timestamp, TIME_FORMAT)
+
+	# convert to datetime object (so they get sorted correctly)
+	for i in range(len(index)):
+		index[i] = datetime.strptime(index[i], TIME_FORMAT)
+
+	# sort
 	index.sort()
+
+	# convert back to string
+	for i in range(len(index)):
+		index[i] = str(index[i].strftime(TIME_FORMAT))
 
 	HeatMapWithTime(
 		name='Heatmap',

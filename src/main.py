@@ -171,7 +171,7 @@ def main():
 	)
 
 	# dump for historic data and heatmap with time
-	now = datetime.utcnow().strftime('%d.%m.%y %H:%M')
+	now = datetime.utcnow().strftime('%d-%m-%y %H:%M')
 	json.dump(mentions, open(f'data/historic/{now} UTC', 'w'))
 
 	# print debug info

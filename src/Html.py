@@ -90,6 +90,7 @@ class H2(Element):
 class Img(Element):
 	def __init__(self, **attributes):
 		super().__init__('img', attributes)
+		self._has_closing_tag = False
 
 class A(Element):
 	def __init__(self, content=None, **attributes):
@@ -110,3 +111,13 @@ class Span(Element):
 	def __init__(self, content=None, **attributes):
 		super().__init__('span', attributes)
 		self.content = content
+
+class Picture(Element):
+	def __init__(self, content=None, **attributes):
+		super().__init__('picture', attributes)
+		self.content = content
+
+class Source(Element):
+	def __init__(self, **attributes):
+		super().__init__('source', attributes)
+		self._has_closing_tag = False

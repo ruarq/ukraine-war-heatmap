@@ -31,6 +31,7 @@ import math
 from dotenv import load_dotenv
 import Html
 from uuid import uuid1
+from functools import cmp_to_key
 
 TIME_FORMAT = '%Y-%m-%d %H:%M UTC'
 SUBMISSION_QUERY_LIMIT = 150
@@ -214,43 +215,52 @@ def generate_news_column(reddit):
 
 	html_news_list = list()
 
+	# sort news by upvotes, most upvotes should be first
+	news.sort(key=cmp_to_key(lambda a, b : b.score - a.score))
+
 	for n in news:
 		html_news_list.append(
-			Html.Li(Html.Div(
-				content=[
-					# Html.Div(
-					# 	[
-					# 		Html.Div(
-					# 			Html.A(
-					# 				content='Link',
-					# 				href=n.url
-					# 			)
-					# 		),
-					# 		Html.Div(
-					# 			Html.A(
-					# 				content='Source',
-					# 				href=n.source
-					# 			)
-					# 		)
-					# 	],
-					# 	Class='element-link-source'
-					# ),
-					Html.Div(content=n.title),
-					Html.A(
-						content=[
-							Html.Div(
-								[
-									Html.Img(src='link.png', alt='hyperlink image', Class='link-img'),
-									'Source'
-								],
-								Class='link-div'
-							)
-						],
-						href=n.source
-					)
-				],
-				id='element-content-div'
-			))
+			Html.Li(
+				Html.Div(
+					content=[
+						# Html.Div(
+						# 	[
+						# 		Html.Div(
+						# 			Html.A(
+						# 				content='Link',
+						# 				href=n.url
+						# 			)
+						# 		),
+						# 		Html.Div(
+						# 			Html.A(
+						# 				content='Source',
+						# 				href=n.source
+						# 			)
+						# 		)
+						# 	],
+						# 	Class='element-link-source'
+						# ),
+						Html.Div(n.title),
+						Html.A(
+							content=[
+								Html.Div(
+									[
+										Html.Img(
+											src='link-mode-light.png',
+											alt='hyperlink image',
+											Class='link-img'
+										),
+										'Source'
+									],
+									Class='link-div'
+								)
+							],
+							href=n.source
+						)
+					],
+					id='element-content-div'
+				)
+			)
 		)
 
 	return Html.Div(
@@ -263,9 +273,12 @@ def generate_news_column(reddit):
 						Class='reddit-logo-img'
 					),
 					Html.H2(
-						Html.A(content=f'&nbsp;r/{subreddit}',
-							href=f'https://reddit.com/r/{subreddit}'
-						)
+						[
+							'&nbsp;',
+							Html.A(content=f'r/{subreddit}',
+								href=f'https://reddit.com/r/{subreddit}'
+							)
+						]
 					)
 				],
 				Class='reddit-logo'

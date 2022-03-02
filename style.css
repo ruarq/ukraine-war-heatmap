@@ -1,3 +1,16 @@
+html {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
 .leaflet-map {
 	float: left;
 	width: 75%;
@@ -14,12 +27,13 @@
 
 .news-column-list {
 	list-style-type: none;
-	padding: 25px;
+	padding-left: 25px;
+	padding-right: 25px;
 }
 
 .news-column-list li {
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .element-content-div {

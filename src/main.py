@@ -258,36 +258,39 @@ def generate_news_column(reddit):
 							href=n.source
 						)
 					],
-					id='element-content-div'
+					Class='element-content-div'
 				)
 			)
 		)
 
 	return Html.Div(
-		content=[
-			Html.Div(
-				content=[
-					Html.Img(
-						src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
-						alt='reddit logo',
-						Class='reddit-logo-img'
-					),
-					Html.H2(
-						[
-							'&nbsp;',
-							Html.A(content=f'r/{subreddit}',
-								href=f'https://www.reddit.com/r/{subreddit}'
-							)
-						]
-					)
-				],
-				Class='reddit-logo'
-			),
-			Html.Ul(
-				content=html_news_list,
-				Class='news-column-list'
-			)
-		],
+		Html.Div(
+			[
+				Html.Div(
+					content=[
+						Html.Img(
+							src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
+							alt='reddit logo',
+							Class='reddit-logo-img'
+						),
+						Html.H2(
+							[
+								'&nbsp;',
+								Html.A(content=f'r/{subreddit}',
+									href=f'https://www.reddit.com/r/{subreddit}'
+								)
+							]
+						)
+					],
+					Class='reddit-logo'
+				),
+				Html.Ul(
+					content=html_news_list,
+					Class='news-column-list'
+				)
+			],
+			Class='news-column-div'
+		),
 		Class='news-column'
 	)
 

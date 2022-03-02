@@ -223,39 +223,34 @@ def generate_news_column(reddit):
 			Html.Li(
 				Html.Div(
 					content=[
-						# Html.Div(
-						# 	[
-						# 		Html.Div(
-						# 			Html.A(
-						# 				content='Link',
-						# 				href=n.url
-						# 			)
-						# 		),
-						# 		Html.Div(
-						# 			Html.A(
-						# 				content='Source',
-						# 				href=n.source
-						# 			)
-						# 		)
-						# 	],
-						# 	Class='element-link-source'
-						# ),
 						Html.Div(n.title),
-						Html.A(
-							content=[
+						Html.Div(
+							[
+								Html.A(
+									content=[
+										Html.Div(
+											[
+												Html.Img(
+													src='link-mode-light.png',
+													alt='hyperlink image',
+													Class='link-img'
+												),
+												'Source'
+											],
+											Class='link-div'
+										)
+									],
+									href=n.source
+								),
 								Html.Div(
 									[
-										Html.Img(
-											src='link-mode-light.png',
-											alt='hyperlink image',
-											Class='link-img'
-										),
-										'Source'
+										Html.Img(src='upvote.png', alt='upvote', Class='upvote-img'),
+										f'&nbsp;{int((n.score / 1000) + 0.5)}K'
 									],
-									Class='link-div'
+									Class='score-div'
 								)
 							],
-							href=n.source
+							Class='element-info-div'
 						)
 					],
 					Class='element-content-div'
@@ -377,7 +372,8 @@ def main():
 							Class='leaflet-map'
 						),
 						generate_news_column(reddit)
-					]
+					],
+					Class='main-body'
 				)
 			]
 		).dumps()

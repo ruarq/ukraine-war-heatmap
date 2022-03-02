@@ -68,13 +68,13 @@ class Link(Element):
 		self._has_closing_tag = False
 
 class Title(Element):
-	def __init__(self, content=''):
+	def __init__(self, content=None):
 		super().__init__('title')
 		self.content = content
 
 class Body(Element):
-	def __init__(self, content=''):
-		super().__init__('body')
+	def __init__(self, content=None, **attributes):
+		super().__init__('body', attributes)
 		self.content = content
 
 class Div(Element):

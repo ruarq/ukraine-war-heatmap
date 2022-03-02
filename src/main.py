@@ -56,6 +56,9 @@ def query_submissions(reddit, sub):
 	r = reddit.subreddit(sub).hot(limit=SUBMISSION_QUERY_LIMIT)
 	return r
 
+def permalink_to_url(permalink):
+	return 'https://www.reddit.com' + permalink
+
 def query_news(reddit, source='worldnews'):
 	submissions = query_submissions(reddit, source)
 
@@ -65,7 +68,8 @@ def query_news(reddit, source='worldnews'):
 	news = list()
 
 	for submission in submissions:
-		is_self_post = submission.url == submission.permalink
+		# no self posts, only links to real news articles
+		is_self_post = submission.url == permalink_to_url(submission.permalink)
 		if submission.score < 10000 or is_self_post:
 			continue
 
@@ -82,7 +86,7 @@ def query_news(reddit, source='worldnews'):
 				submission.score,
 				submission.author.name,
 				submission.url,
-				'https://reddit.com' + submission.permalink
+				permalink_to_url(submission.permalink)
 			))
 
 	return news
@@ -231,8 +235,8 @@ def generate_news_column(reddit):
 					# 	],
 					# 	Class='element-link-source'
 					# ),
-					Html.A(content='Source', href=n.source),
-					Html.Div(content=n.title)
+					Html.Div(content=n.title),
+					Html.A(content='Source', href=n.source)
 				],
 				id='element-content-div'
 			))
@@ -248,7 +252,7 @@ def generate_news_column(reddit):
 						style='height: 30px'
 					),
 					Html.H2(
-						Html.A(content=f'r/{subreddit}',
+						Html.A(content=f'&nbsp;r/{subreddit}',
 							href=f'https://reddit.com/r/{subreddit}'
 						)
 					)

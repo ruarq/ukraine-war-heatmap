@@ -12,7 +12,12 @@ a:hover {
 	text-decoration: underline;
 }
 
-.ext-link-img {
+.link-div {
+	display: flex;
+	align-items: center;
+}
+
+.link-img {
 	height: 1em;
 }
 
@@ -50,10 +55,14 @@ a:hover {
 	justify-content: space-between;
 }
 
-#reddit-logo {
+.reddit-logo {
 	display:flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.reddit-logo-img {
+	height: 30px;
 }
 
 @media screen and (max-width: 800px) {

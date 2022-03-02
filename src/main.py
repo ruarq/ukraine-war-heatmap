@@ -240,10 +240,10 @@ def generate_news_column(reddit):
 						content=[
 							Html.Div(
 								[
-									Html.Img(src='ext_link.png', alt='external-link', Class='ext-link-img'),
+									Html.Img(src='link.png', alt='hyperlink image', Class='link-img'),
 									'Source'
 								],
-								style='align-items: center;'
+								Class='link-div'
 							)
 						],
 						href=n.source
@@ -259,8 +259,8 @@ def generate_news_column(reddit):
 				content=[
 					Html.Img(
 						src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
-						alt='reddit-logo',
-						style='height: 30px'
+						alt='reddit logo',
+						Class='reddit-logo-img'
 					),
 					Html.H2(
 						Html.A(content=f'&nbsp;r/{subreddit}',
@@ -268,7 +268,7 @@ def generate_news_column(reddit):
 						)
 					)
 				],
-				id='reddit-logo'
+				Class='reddit-logo'
 			),
 			Html.Ul(
 				content=html_news_list,

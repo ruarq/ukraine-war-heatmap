@@ -41,7 +41,7 @@ class Element:
 			if type(self.content) is list:
 				for elem in self.content:
 					s += str(elem)
-			else:
+			elif self.content is not None:
 				s += str(self.content)
 			s += f'</{self._tag}>'
 		else:
@@ -104,4 +104,9 @@ class Ul(Element):
 class Li(Element):
 	def __init__(self, content=None, **attributes):
 		super().__init__('li', attributes)
+		self.content = content
+
+class Span(Element):
+	def __init__(self, content=None, **attributes):
+		super().__init__('span', attributes)
 		self.content = content

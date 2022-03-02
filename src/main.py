@@ -82,7 +82,7 @@ def query_news(reddit, source='worldnews'):
 				submission.score,
 				submission.author.name,
 				submission.url,
-				submission.permalink
+				'https://reddit.com' + submission.permalink
 			))
 
 	return news
@@ -214,23 +214,24 @@ def generate_news_column(reddit):
 		html_news_list.append(
 			Html.Li(Html.Div(
 				content=[
-					Html.Div(
-						[
-							Html.Div(
-								Html.A(
-									content='Link',
-									href=n.url
-								)
-							),
-							Html.Div(
-								Html.A(
-									content='Source',
-									href=n.source
-								)
-							)
-						],
-						Class='element-link-source'
-					),
+					# Html.Div(
+					# 	[
+					# 		Html.Div(
+					# 			Html.A(
+					# 				content='Link',
+					# 				href=n.url
+					# 			)
+					# 		),
+					# 		Html.Div(
+					# 			Html.A(
+					# 				content='Source',
+					# 				href=n.source
+					# 			)
+					# 		)
+					# 	],
+					# 	Class='element-link-source'
+					# ),
+					Html.A(content='Source', href=n.source),
 					Html.Div(content=n.title)
 				],
 				id='element-content-div'

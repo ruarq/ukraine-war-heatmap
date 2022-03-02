@@ -44,7 +44,7 @@ class RedditNews:
 		self.score = score
 		self.author = author
 		self.source = source
-		self.url = url
+		self.reddit_link = url
 
 def load_cities():
 	cities = open(f'data/cities').read().split('\n')
@@ -236,7 +236,18 @@ def generate_news_column(reddit):
 					# 	Class='element-link-source'
 					# ),
 					Html.Div(content=n.title),
-					Html.A(content='Source', href=n.source)
+					Html.A(
+						content=[
+							Html.Div(
+								[
+									Html.Img(src='ext_link.png', alt='external-link', Class='ext-link-img'),
+									'Source'
+								],
+								style='align-items: center;'
+							)
+						],
+						href=n.source
+					)
 				],
 				id='element-content-div'
 			))

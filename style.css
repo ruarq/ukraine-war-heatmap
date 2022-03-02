@@ -5,10 +5,15 @@ html {
 a {
 	font-weight: bold;
 	text-decoration: none;
+	color: black;
 }
 
 a:hover {
 	text-decoration: underline;
+}
+
+.ext-link-img {
+	height: 1em;
 }
 
 .leaflet-map {

@@ -14,6 +14,7 @@
 
 .news-column-list {
 	list-style-type: none;
+	padding: 25px;
 }
 
 .news-column-list li {
@@ -21,8 +22,13 @@
 	margin-bottom: 5px;
 }
 
-.news-column-list .element-content-div {
+.element-content-div {
 	padding: 5px;
+}
+
+.element-link-source {
+	display: flex;
+	justify-content: space-between;
 }
 
 #reddit-logo {

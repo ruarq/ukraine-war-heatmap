@@ -276,7 +276,7 @@ def generate_news_column(reddit):
 						[
 							'&nbsp;',
 							Html.A(content=f'r/{subreddit}',
-								href=f'https://reddit.com/r/{subreddit}'
+								href=f'https://www.reddit.com/r/{subreddit}'
 							)
 						]
 					)

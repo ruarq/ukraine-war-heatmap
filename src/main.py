@@ -30,19 +30,21 @@ import os
 import math
 from dotenv import load_dotenv
 import Html
+from uuid import uuid1
 
 TIME_FORMAT = '%Y-%m-%d %H:%M UTC'
 SUBMISSION_QUERY_LIMIT = 150
 
 submission_count = 0
 
-class News:
-	def __init__(self, title, time, score, author, source):
+class RedditNews:
+	def __init__(self, title, time, score, author, source, url):
 		self.title = title
 		self.time = time
 		self.score = score
 		self.author = author
 		self.source = source
+		self.url = url
 
 def load_cities():
 	cities = open(f'data/cities').read().split('\n')
@@ -63,7 +65,8 @@ def query_news(reddit, source='worldnews'):
 	news = list()
 
 	for submission in submissions:
-		if submission.score < 10000:
+		is_self_post = submission.url == submission.permalink
+		if submission.score < 10000 or is_self_post:
 			continue
 
 		# Check all the trigger words
@@ -73,7 +76,14 @@ def query_news(reddit, source='worldnews'):
 				relevant = True
 
 		if relevant:
-			news.append(News(submission.title, submission.created_utc, submission.score, submission.author.name, submission.url))
+			news.append(RedditNews(
+				submission.title,
+				submission.created_utc,
+				submission.score,
+				submission.author.name,
+				submission.url,
+				submission.permalink
+			))
 
 	return news
 
@@ -164,7 +174,16 @@ def generate_heatmap(mapdata):
 	fl.TileLayer('OpenStreetMap').add_to(map)
 	fl.LayerControl().add_to(map)
 
-	return map._repr_html_()
+	# Yes. I know. We have to do it like that.
+	# map._repr_html_() will produce a stupid bug
+	# where the map keeps reloading in itself.
+	filename = 'map_' + str(uuid1()) + '.html'
+	map.save(filename)
+	file = open(filename, 'r')
+	content = file.read()
+	file.close()
+	os.remove(filename)
+	return content
 
 def merge_dicts(a, b):
 	return { k: a.get(k, 0) + b.get(k, 0) for k in set(a) | set(b) }
@@ -193,37 +212,52 @@ def generate_news_column(reddit):
 
 	for n in news:
 		html_news_list.append(
-			Html.Li(Html.Div(content=[
-					Html.Div(Html.A(
-						content='Source',
-						href=n.source
-					)),
+			Html.Li(Html.Div(
+				content=[
+					Html.Div(
+						[
+							Html.Div(
+								Html.A(
+									content='Link',
+									href=n.url
+								)
+							),
+							Html.Div(
+								Html.A(
+									content='Source',
+									href=n.source
+								)
+							)
+						],
+						Class='element-link-source'
+					),
 					Html.Div(content=n.title)
 				],
 				id='element-content-div'
 			))
 		)
 
-	# Reddit logo
 	return Html.Div(
 		content=[
-			Html.Div(content=[
-				Html.Img(
-					src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
-					alt='reddit-logo',
-					style='height: 30px'
-				),
-				Html.H2(
-					Html.A(content=f'r/{subreddit}',
-						href=f'https://reddit.com/r/{subreddit}'
+			Html.Div(
+				content=[
+					Html.Img(
+						src='https://www.redditinc.com/assets/images/site/reddit-logo.png',
+						alt='reddit-logo',
+						style='height: 30px'
+					),
+					Html.H2(
+						Html.A(content=f'r/{subreddit}',
+							href=f'https://reddit.com/r/{subreddit}'
+						)
 					)
-				)],
+				],
 				id='reddit-logo'
 			),
-			Html.Div(Html.Ul(
+			Html.Ul(
 				content=html_news_list,
 				Class='news-column-list'
-			))
+			)
 		],
 		Class='news-column'
 	)
@@ -296,19 +330,25 @@ def main():
 
 	file = open('index.html', 'w')
 	file.write(
-		Html.Html([
-			Html.Head([
-				Html.Title('Ukraine War Map/Heatmap by ruarq'),
-				Html.Link(rel='stylesheet', type='text/css', href='style.css')
-			]),
-			Html.Body([
-				Html.Div(
-					content=heatmap_html,
-					Class='leaflet-map'
+		Html.Html(
+			[
+				Html.Head(
+					[
+						Html.Title('Ukraine War Map/Heatmap by ruarq'),
+						Html.Link(rel='stylesheet', type='text/css', href='style.css')
+					]
 				),
-				generate_news_column(reddit)
-			])
-		]).dumps()
+				Html.Body(
+					[
+						Html.Div(
+							content=heatmap_html,
+							Class='leaflet-map'
+						),
+						generate_news_column(reddit)
+					]
+				)
+			]
+		).dumps()
 	)
 
 if __name__ == '__main__':

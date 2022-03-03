@@ -6,8 +6,7 @@ You can see that heatmap [here](https://ruarq.github.io/ukraine-war-heatmap/). I
 - Read [this](https://www.reddit.com/r/ukraine/comments/s6g5un/want_to_support_ukraine_heres_a_list_of_charities/)
 	reddit post from [r/ukraine](https://www.reddit.com/r/ukraine) for a big list of charities to donate to
 - Do not spread misinformation and do report misinformation
-- If you have the infrastructure or just for fun, you can help the
-	[IT ARMY of Ukraine](https://t.me/itarmyofukraine2022) to fight against russia (at your own risk)
+- You can help the [IT ARMY of Ukraine](https://t.me/itarmyofukraine2022) to fight against russia (at your own risk)
 - Checkout [all the other projects](https://github.com/topics/ukraine/) on github related to ukraine and the invasion
 
 ## How to run

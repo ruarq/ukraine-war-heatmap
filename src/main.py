@@ -357,6 +357,13 @@ def main():
 			[
 				Html.Head(
 					[
+						Html.Meta(charset='utf-8'),
+						Html.Meta(name='description', content='Watch a live heatmap to see where the war in ukraine is most active.'),
+						Html.Meta(name='author', content='ruarq'),
+						Html.Meta(name='copyright', content='ruarq'),
+						Html.Meta(name='language', content='English'),
+						Html.Meta(name='keywords', content='ukraine, ukraine invasion, ukraine heatmap, ukraine live heatmap, map, heatmap, ukraine map, ukraine live map, live map, help ukraine, ruarq, github.io, ukraine conflict, conflict, ukraine war, war, russia, ukraine russia, ukraine russia war'),
+						Html.Meta(name='revisit-after', content='1 days'),
 						Html.Title('Ukraine War Map/Heatmap by ruarq'),
 						Html.Link(rel='stylesheet', type='text/css', href='style.css')
 					]

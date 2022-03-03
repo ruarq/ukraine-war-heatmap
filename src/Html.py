@@ -62,6 +62,11 @@ class Head(Element):
 		super().__init__('head')
 		self.content = content
 
+class Meta(Element):
+	def __init__(self, **attributes):
+		super().__init__('meta', attributes)
+		self._has_closing_tag = False
+
 class Link(Element):
 	def __init__(self, **attributes):
 		super().__init__('link', attributes)

@@ -39,13 +39,10 @@ SUBMISSION_QUERY_LIMIT = 150
 submission_count = 0
 
 class RedditNews:
-	def __init__(self, title, time, score, author, source, url):
+	def __init__(self, title, score, source):
 		self.title = title
-		self.time = time
 		self.score = score
-		self.author = author
 		self.source = source
-		self.reddit_link = url
 
 def load_cities():
 	cities = open(f'data/cities').read().split('\n')
@@ -81,14 +78,13 @@ def query_news(reddit, source='worldnews'):
 				relevant = True
 
 		if relevant:
-			news.append(RedditNews(
-				submission.title,
-				submission.created_utc,
-				submission.score,
-				submission.author.name,
-				submission.url,
-				permalink_to_url(submission.permalink)
-			))
+			news.append(
+				RedditNews(
+					submission.title,
+					submission.score,
+					submission.url
+				)
+			)
 
 	return news
 

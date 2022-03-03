@@ -28,11 +28,13 @@ a:hover {
 .score-div {
 	color: gray;
 	display: flex;
-	justify-content: center;
+	align-items: center;
 }
 
 .upvote-img {
-	height: 1em;
+	height: 0.8em;
+	position: relative;
+	top: -0.5px;
 }
 
 .leaflet-map {

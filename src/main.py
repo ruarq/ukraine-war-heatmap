@@ -34,7 +34,7 @@ from uuid import uuid1
 from functools import cmp_to_key
 
 TIME_FORMAT = '%Y-%m-%d %H:%M UTC'
-SUBMISSION_QUERY_LIMIT = 150
+SUBMISSION_QUERY_LIMIT = 300
 
 submission_count = 0
 
@@ -95,6 +95,10 @@ def get_city_mention_counts(cities, submissions):
 	for submission in submissions:
 		global submission_count
 		submission_count += 1
+
+		# filter 'bad' submissions
+		if submission.score < 100:
+			continue
 
 		# go through each city and check if it's in the submission title
 		for city in cities:
@@ -287,6 +291,8 @@ def generate_news_column(reddit):
 
 def main():
 	load_dotenv()
+	
+	now = datetime.utcnow().strftime(TIME_FORMAT)
 
 	# init praw
 	reddit = praw.Reddit(
@@ -316,7 +322,6 @@ def main():
 	)
 
 	# dump for historic data and heatmap with time
-	now = datetime.utcnow().strftime(TIME_FORMAT)
 	json.dump(mentions, open(f'data/historic/{now}', 'w'))
 
 	# print debug info

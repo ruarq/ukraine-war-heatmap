@@ -348,7 +348,11 @@ def main():
 
 			# add location to the mapdata if queried successfully
 			if l is not None:
-				d = [l[0], l[1], math.sqrt(data[time][city] / max(data[time].values()))]
+				d = [
+					round(l[0], 2),
+					round(l[1], 2),
+					round(math.sqrt(data[time][city] / max(data[time].values())), 2)
+				]
 				if time in mapdata:
 					mapdata[time].append(d)
 				else:

@@ -196,8 +196,12 @@ def merge_dicts(a, b):
 def query_mentions_from_subreddits(reddit, cities, subreddits):
 	mentions = dict()
 	for subreddit in subreddits:
-		submissions = query_submissions(reddit, subreddit)
-		mentions = merge_dicts(mentions, get_city_mention_counts(cities, submissions))
+		try:
+			submissions = query_submissions(reddit, subreddit)
+			mentions = merge_dicts(mentions, get_city_mention_counts(cities, submissions))
+		except:
+			print(f'Something bad happened while querying mentions from r/{subreddit}')
+
 	return mentions
 
 def load_historic_data(directory):

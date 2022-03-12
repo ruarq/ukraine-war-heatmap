@@ -338,6 +338,24 @@ def main():
 	locations = {}
 	data = load_historic_data('data/historic')
 
+	# smooth out the values, since reddit data is a little bit inconsistent
+	prev_time = None
+	smooth_data = dict()
+	for time in data.keys():
+		smooth_data[time] = dict()
+		for city in data[time].keys():
+			if prev_time is not None:
+				value = data[time][city]
+				prev_value = 0
+				if city in smooth_data[prev_time]:
+					prev_value = smooth_data[prev_time][city]
+				delta = value - prev_value
+				smooth_data[time][city] = prev_value + delta * 0.25
+			else:
+				smooth_data[time][city] = data[time][city]
+		prev_time = time
+	data = smooth_data
+
 	# compile mapdata for folium
 	for time in data.keys():
 		# get the city locations for each city

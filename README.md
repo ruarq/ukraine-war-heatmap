@@ -2,6 +2,10 @@
 This project takes submissions about Ukraine from subreddits like r/CombatFootage, r/UkraineWarVideoReport, r/ukraine, r/worldnews, r/UkraineInvasionVideos and r/UkrainevRussia and translates them into a heatmap where most of the stuff related to the war in Ukraine is happening.
 You can see that heatmap [here](https://ruarq.github.io/ukraine-war-heatmap/). It updates every 30 minutes.
 
+## It's over
+The heatmap is sadly not a good way of visualizing the war in ukraine, and activity on reddit is slowly dying.
+For these reasons I decided to shut the automatic updates down.
+
 ## Support Ukraine
 - Read [this](https://www.reddit.com/r/ukraine/comments/s6g5un/want_to_support_ukraine_heres_a_list_of_charities/)
 	reddit post from [r/ukraine](https://www.reddit.com/r/ukraine) for a big list of charities to donate to

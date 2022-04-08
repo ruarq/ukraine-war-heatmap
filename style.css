@@ -36,7 +36,7 @@ a:hover {
 	position: relative;
 	top: -0.5px;
 }
-
+/*
 .leaflet-map {
 	float: left;
 	width: 75%;
@@ -50,7 +50,7 @@ a:hover {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-
+*/
 .news-column-div {
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -100,7 +100,7 @@ a:hover {
 .reddit-logo-img {
 	height: 30px;
 }
-
+/*
 @media screen and (max-width: 1000px) {
 	.leaflet-map {
 		width: 100%;
@@ -114,3 +114,4 @@ a:hover {
 		overflow-y: visible;
 	}
 }
+*/

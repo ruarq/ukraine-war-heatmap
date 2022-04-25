@@ -16,7 +16,7 @@ For these reasons I decided to shut the automatic updates down.
 ## How to run
 1. Install dependencies with `pip install dotenv geopy praw`
 
-	**NOTE:** You will also have to install my [folium fork](https://github.com/python-visualization/folium).
+	**NOTE:** You will also have to install my [folium fork](https://github.com/ruarq/folium).
 
 2. Create `.env` file and populate it with:
 	```ini
